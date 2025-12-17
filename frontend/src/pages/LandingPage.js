@@ -47,8 +47,8 @@ const LandingPage = () => {
 
         <Typography variant="body1" paragraph sx={{ mb: 4, fontSize: '1.1rem' }}>
           Assess your cybersecurity knowledge and aptitude before the training program. 
-          This test evaluates fundamental concepts across five key domains to help 
-          tailor the training to participant needs.
+          This test evaluates fundamental concepts across five key domains with 25 questions 
+          (5 questions from each domain) to help tailor the training to participant needs.
         </Typography>
 
         <Grid container spacing={3} sx={{ mb: 4 }}>

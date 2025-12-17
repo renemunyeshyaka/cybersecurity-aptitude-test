@@ -253,14 +253,14 @@ const TestPage = () => {
             Previous
           </Button>
 
-          <Box sx={{ display: 'flex', gap: 2 }}>
+          <Box sx={{ display: 'grid', gap: 1, width: { xs: '100%', sm: 'auto' }, gridTemplateColumns: 'repeat(auto-fit, minmax(40px, 1fr))' }}>
             {questions.map((_, index) => (
               <Button
                 key={index}
-                variant={index === currentQuestion ? "contained" : "outlined"}
+                variant={index === currentQuestion ? 'contained' : 'outlined'}
                 size="small"
                 onClick={() => setCurrentQuestion(index)}
-                sx={{ minWidth: '40px' }}
+                sx={{ minWidth: 0, px: 1 }}
               >
                 {index + 1}
               </Button>
@@ -289,7 +289,7 @@ const TestPage = () => {
         {/* Progress Indicator */}
         <Box sx={{ mt: 3 }}>
           <Typography variant="body2" gutterBottom>
-            Progress: {Object.keys(answers).length} of {questions.length} questions answered
+            Progress: {Object.keys(answers).length} of {questions.length} questions answered ({Math.round((Object.keys(answers).length / questions.length) * 100)}%)
           </Typography>
           <LinearProgress 
             variant="determinate" 

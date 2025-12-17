@@ -189,6 +189,44 @@ const ResultsPage = () => {
           </CardContent>
         </Card>
 
+        {/* Summary Grid */}
+        <Box sx={{ mb: 4 }}>
+          <Grid container spacing={2}>
+            <Grid item xs={6} md={3}>
+              <Typography variant="body2" color="text.secondary">
+                Total Questions
+              </Typography>
+              <Typography variant="h5">
+                {totalQuestions}
+              </Typography>
+            </Grid>
+            <Grid item xs={6} md={3}>
+              <Typography variant="body2" color="text.secondary">
+                Correct Answers
+              </Typography>
+              <Typography variant="h5">
+                {correctAnswers}
+              </Typography>
+            </Grid>
+            <Grid item xs={6} md={3}>
+              <Typography variant="body2" color="text.secondary">
+                Duration
+              </Typography>
+              <Typography variant="h5">
+                {Math.floor(duration / 60)}m {duration % 60}s
+              </Typography>
+            </Grid>
+            <Grid item xs={6} md={3}>
+              <Typography variant="body2" color="text.secondary">
+                Questions per Category
+              </Typography>
+              <Typography variant="h5">
+                5
+              </Typography>
+            </Grid>
+          </Grid>
+        </Box>
+
         {/* Category Breakdown */}
         {Object.keys(categoryScores).length > 0 && (
           <Card sx={{ mb: 4 }}>

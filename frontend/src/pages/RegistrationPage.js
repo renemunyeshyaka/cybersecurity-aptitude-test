@@ -167,13 +167,16 @@ const RegistrationPage = () => {
                 </Typography>
                 <Box component="ul" sx={{ mt: 1, pl: 2 }}>
                   <Typography component="li" variant="body2">
+                    Test includes 25 questions (5 from each cybersecurity domain)
+                  </Typography>
+                  <Typography component="li" variant="body2">
+                    Time limit: 30 minutes (approximately 1.2 minutes per question)
+                  </Typography>
+                  <Typography component="li" variant="body2">
                     Ensure you have stable internet connection
                   </Typography>
                   <Typography component="li" variant="body2">
                     The test must be completed in one sitting
-                  </Typography>
-                  <Typography component="li" variant="body2">
-                    You cannot pause or restart the test
                   </Typography>
                   <Typography component="li" variant="body2">
                     Time starts when you click "Start Test"

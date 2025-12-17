@@ -77,6 +77,26 @@ app.use('/api/', limiter);
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
+// Handle body parsing errors (JSON / urlencoded)
+app.use((err, req, res, next) => {
+  if (!err) return next();
+
+  console.error('Body parse error:', err);
+
+  // Bad JSON
+  if (err instanceof SyntaxError && err.status === 400 && 'body' in err) {
+    return res.status(400).json({ error: 'Invalid JSON payload' });
+  }
+
+  // Payload too large
+  if (err.type === 'entity.too.large' || err.status === 413) {
+    return res.status(413).json({ error: 'Payload too large' });
+  }
+
+  // Pass on to default error handler
+  next(err);
+});
+
 // ============================================
 // REQUEST LOGGING MIDDLEWARE
 // ============================================
@@ -88,11 +108,11 @@ app.use((req, res, next) => {
 // ============================================
 // IN-MEMORY DATA STORAGE (For demo purposes)
 // ============================================
-const participants = [];
-const tests = [];
+
 const questions = [
+  // CYBER FOUNDATIONS & RECONNAISSANCE (5 questions)
   {
-    id: 'q1',
+    id: 'cf1',
     question_text: 'What is the primary goal of reconnaissance in cybersecurity?',
     category: 'CYBER_FOUNDATIONS',
     difficulty: 'easy',
@@ -107,7 +127,69 @@ const questions = [
     points: 1
   },
   {
-    id: 'q2',
+    id: 'cf2',
+    question_text: 'Which tool is commonly used for network scanning and reconnaissance?',
+    category: 'CYBER_FOUNDATIONS',
+    difficulty: 'medium',
+    options: {
+      A: 'Nmap',
+      B: 'Wireshark',
+      C: 'Metasploit',
+      D: 'Burp Suite'
+    },
+    correct_answer: 'A',
+    explanation: 'Nmap (Network Mapper) is the most popular tool for network discovery and security auditing.',
+    points: 1
+  },
+  {
+    id: 'cf3',
+    question_text: 'What does OSINT stand for in cybersecurity?',
+    category: 'CYBER_FOUNDATIONS',
+    difficulty: 'medium',
+    options: {
+      A: 'Open Source Intelligence',
+      B: 'Operating System Integration',
+      C: 'Online Security Interface',
+      D: 'Official Security Investigation'
+    },
+    correct_answer: 'A',
+    explanation: 'OSINT stands for Open Source Intelligence, which involves gathering information from publicly available sources.',
+    points: 1
+  },
+  {
+    id: 'cf4',
+    question_text: 'Which phase comes after reconnaissance in the ethical hacking process?',
+    category: 'CYBER_FOUNDATIONS',
+    difficulty: 'medium',
+    options: {
+      A: 'Scanning',
+      B: 'Maintaining Access',
+      C: 'Covering Tracks',
+      D: 'Reporting'
+    },
+    correct_answer: 'A',
+    explanation: 'After reconnaissance, the next phase is scanning, where systems are scanned for vulnerabilities.',
+    points: 1
+  },
+  {
+    id: 'cf5',
+    question_text: 'What is footprinting in cybersecurity?',
+    category: 'CYBER_FOUNDATIONS',
+    difficulty: 'hard',
+    options: {
+      A: 'Creating a profile of the target organization',
+      B: 'Encrypting data footprints',
+      C: 'Deleting system logs',
+      D: 'Monitoring network traffic'
+    },
+    correct_answer: 'A',
+    explanation: 'Footprinting is the process of gathering information about a target system to create a profile of the organization.',
+    points: 1
+  },
+
+  // LINUX FUNDAMENTALS (5 questions)
+  {
+    id: 'lf1',
     question_text: 'What command is used to change file permissions in Linux?',
     category: 'LINUX_FUNDAMENTALS',
     difficulty: 'easy',
@@ -122,7 +204,69 @@ const questions = [
     points: 1
   },
   {
-    id: 'q3',
+    id: 'lf2',
+    question_text: 'Which command shows running processes in Linux?',
+    category: 'LINUX_FUNDAMENTALS',
+    difficulty: 'easy',
+    options: {
+      A: 'ls',
+      B: 'ps',
+      C: 'top',
+      D: 'Both B and C'
+    },
+    correct_answer: 'D',
+    explanation: 'Both ps and top commands show running processes in Linux.',
+    points: 1
+  },
+  {
+    id: 'lf3',
+    question_text: 'What is the purpose of the sudo command?',
+    category: 'LINUX_FUNDAMENTALS',
+    difficulty: 'easy',
+    options: {
+      A: 'To switch users',
+      B: 'To execute commands with superuser privileges',
+      C: 'To shutdown the system',
+      D: 'To display system information'
+    },
+    correct_answer: 'B',
+    explanation: 'The sudo command allows a permitted user to execute a command as the superuser or another user.',
+    points: 1
+  },
+  {
+    id: 'lf4',
+    question_text: 'Which command is used to search for text patterns in files?',
+    category: 'LINUX_FUNDAMENTALS',
+    difficulty: 'medium',
+    options: {
+      A: 'find',
+      B: 'grep',
+      C: 'locate',
+      D: 'search'
+    },
+    correct_answer: 'B',
+    explanation: 'The grep command is used to search text or search the given file for lines containing a match to the given strings.',
+    points: 1
+  },
+  {
+    id: 'lf5',
+    question_text: 'What does the command "ls -la" display?',
+    category: 'LINUX_FUNDAMENTALS',
+    difficulty: 'medium',
+    options: {
+      A: 'List files in alphabetical order',
+      B: 'List all files including hidden ones with details',
+      C: 'List only directories',
+      D: 'List files by size'
+    },
+    correct_answer: 'B',
+    explanation: 'ls -la lists all files (including hidden ones) in long format with detailed information.',
+    points: 1
+  },
+
+  // ATTACK VECTORS & EXPLOITATION (5 questions)
+  {
+    id: 'av1',
     question_text: 'What is a SQL Injection attack?',
     category: 'ATTACK_VECTORS',
     difficulty: 'medium',
@@ -137,7 +281,69 @@ const questions = [
     points: 1
   },
   {
-    id: 'q4',
+    id: 'av2',
+    question_text: 'Which of these is NOT a common web application vulnerability?',
+    category: 'ATTACK_VECTORS',
+    difficulty: 'hard',
+    options: {
+      A: 'Cross-Site Scripting (XSS)',
+      B: 'Cross-Site Request Forgery (CSRF)',
+      C: 'Secure Socket Layer (SSL)',
+      D: 'Insecure Direct Object References'
+    },
+    correct_answer: 'C',
+    explanation: 'SSL is a security protocol, not a vulnerability.',
+    points: 1
+  },
+  {
+    id: 'av3',
+    question_text: 'What is a buffer overflow attack?',
+    category: 'ATTACK_VECTORS',
+    difficulty: 'hard',
+    options: {
+      A: 'Writing data beyond the allocated buffer memory',
+      B: 'Overloading network buffers',
+      C: 'Filling disk space',
+      D: 'Flooding email servers'
+    },
+    correct_answer: 'A',
+    explanation: 'Buffer overflow occurs when a program writes data to a buffer beyond its allocated memory.',
+    points: 1
+  },
+  {
+    id: 'av4',
+    question_text: 'What is phishing?',
+    category: 'ATTACK_VECTORS',
+    difficulty: 'easy',
+    options: {
+      A: 'A social engineering attack to steal sensitive information',
+      B: 'A network flooding attack',
+      C: 'A type of virus',
+      D: 'A hardware vulnerability'
+    },
+    correct_answer: 'A',
+    explanation: 'Phishing is a social engineering attack where attackers impersonate legitimate entities to steal sensitive data.',
+    points: 1
+  },
+  {
+    id: 'av5',
+    question_text: 'What is a zero-day vulnerability?',
+    category: 'ATTACK_VECTORS',
+    difficulty: 'medium',
+    options: {
+      A: 'A vulnerability known for zero days',
+      B: 'A flaw unknown to the vendor with no patch available',
+      C: 'A vulnerability that affects zero systems',
+      D: 'A minor security issue'
+    },
+    correct_answer: 'B',
+    explanation: 'A zero-day vulnerability is a software flaw unknown to the vendor with no available patch.',
+    points: 1
+  },
+
+  // DEFENSE & OPERATIONS (5 questions)
+  {
+    id: 'do1',
     question_text: 'What is the purpose of a Security Information and Event Management (SIEM) system?',
     category: 'DEFENSE_OPS',
     difficulty: 'medium',
@@ -152,7 +358,69 @@ const questions = [
     points: 1
   },
   {
-    id: 'q5',
+    id: 'do2',
+    question_text: 'Which is NOT a principle of defense in depth?',
+    category: 'DEFENSE_OPS',
+    difficulty: 'hard',
+    options: {
+      A: 'Multiple layers of security',
+      B: 'Single point of failure',
+      C: 'Diverse defensive mechanisms',
+      D: 'Redundant security controls'
+    },
+    correct_answer: 'B',
+    explanation: 'Defense in depth avoids single points of failure by implementing multiple security layers.',
+    points: 1
+  },
+  {
+    id: 'do3',
+    question_text: 'What is the purpose of a firewall?',
+    category: 'DEFENSE_OPS',
+    difficulty: 'easy',
+    options: {
+      A: 'Monitor and control network traffic',
+      B: 'Encrypt data transmissions',
+      C: 'Scan for viruses',
+      D: 'Manage user passwords'
+    },
+    correct_answer: 'A',
+    explanation: 'A firewall monitors and controls incoming and outgoing network traffic based on predetermined security rules.',
+    points: 1
+  },
+  {
+    id: 'do4',
+    question_text: 'What does IDS stand for?',
+    category: 'DEFENSE_OPS',
+    difficulty: 'easy',
+    options: {
+      A: 'Intrusion Detection System',
+      B: 'Internet Defense System',
+      C: 'Internal Data Security',
+      D: 'Integrated Defense Solution'
+    },
+    correct_answer: 'A',
+    explanation: 'IDS stands for Intrusion Detection System, which monitors network traffic for suspicious activity.',
+    points: 1
+  },
+  {
+    id: 'do5',
+    question_text: 'What is penetration testing?',
+    category: 'DEFENSE_OPS',
+    difficulty: 'medium',
+    options: {
+      A: 'Authorized simulated cyberattack on a computer system',
+      B: 'Testing network speed',
+      C: 'Checking software compatibility',
+      D: 'Validating user permissions'
+    },
+    correct_answer: 'A',
+    explanation: 'Penetration testing is an authorized simulated attack performed to evaluate security.',
+    points: 1
+  },
+
+  // CAPSTONE & PORTFOLIO (5 questions)
+  {
+    id: 'cp1',
     question_text: 'In incident response, what does the "Containment" phase involve?',
     category: 'CAPSTONE',
     difficulty: 'medium',
@@ -165,8 +433,72 @@ const questions = [
     correct_answer: 'A',
     explanation: 'Containment focuses on preventing the incident from causing more damage.',
     points: 1
+  },
+  {
+    id: 'cp2',
+    question_text: 'What is the main purpose of a cybersecurity portfolio?',
+    category: 'CAPSTONE',
+    difficulty: 'easy',
+    options: {
+      A: 'To showcase practical skills and projects',
+      B: 'To store encrypted files',
+      C: 'To manage network devices',
+      D: 'To document theoretical knowledge only'
+    },
+    correct_answer: 'A',
+    explanation: 'A portfolio demonstrates practical cybersecurity skills through completed projects and assessments.',
+    points: 1
+  },
+  {
+    id: 'cp3',
+    question_text: 'What is the first step in the incident response process?',
+    category: 'CAPSTONE',
+    difficulty: 'easy',
+    options: {
+      A: 'Preparation',
+      B: 'Identification',
+      C: 'Containment',
+      D: 'Eradication'
+    },
+    correct_answer: 'A',
+    explanation: 'Preparation is the first step, involving developing policies and procedures before incidents occur.',
+    points: 1
+  },
+  {
+    id: 'cp4',
+    question_text: 'What does NIST stand for in cybersecurity frameworks?',
+    category: 'CAPSTONE',
+    difficulty: 'medium',
+    options: {
+      A: 'National Institute of Standards and Technology',
+      B: 'Network International Security Team',
+      C: 'National Internet Security Taskforce',
+      D: 'Network Infrastructure Security Technology'
+    },
+    correct_answer: 'A',
+    explanation: 'NIST stands for National Institute of Standards and Technology, which develops cybersecurity frameworks.',
+    points: 1
+  },
+  {
+    id: 'cp5',
+    question_text: 'What is risk assessment in cybersecurity?',
+    category: 'CAPSTONE',
+    difficulty: 'hard',
+    options: {
+      A: 'Identifying, analyzing, and evaluating risks',
+      B: 'Testing system vulnerabilities',
+      C: 'Implementing security controls',
+      D: 'Monitoring network traffic'
+    },
+    correct_answer: 'A',
+    explanation: 'Risk assessment involves identifying, analyzing, and evaluating potential risks to an organization.',
+    points: 1
   }
 ];
+
+// In-memory stores for demo (participants and tests)
+const participants = [];
+const tests = [];
 
 // ============================================
 // API ROUTES
@@ -229,12 +561,29 @@ app.post('/api/test/start', (req, res) => {
     // Update participant's test count
     participant.testsTaken = (participant.testsTaken || 0) + 1;
 
+    // Select 5 questions from each category (randomly) and return shuffled set
+    const selectedQuestions = [];
+    const categories = ['CYBER_FOUNDATIONS', 'LINUX_FUNDAMENTALS', 'ATTACK_VECTORS', 'DEFENSE_OPS', 'CAPSTONE'];
+
+    categories.forEach(category => {
+      const categoryQuestions = questions.filter(q => q.category === category);
+
+      // Randomly select 5 questions from each category (or fewer if not available)
+      const shuffled = [...categoryQuestions].sort(() => 0.5 - Math.random());
+      const selected = shuffled.slice(0, Math.min(5, shuffled.length));
+
+      selectedQuestions.push(...selected);
+    });
+
+    // Shuffle all selected questions
+    const shuffledQuestions = selectedQuestions.sort(() => 0.5 - Math.random());
+
     // Return test data
     res.status(200).json({
       message: 'Test started successfully',
       testId: test.id,
       participantId: participant.id,
-      questions: questions.map(q => ({
+      questions: shuffledQuestions.map(q => ({
         id: q.id,
         question_text: q.question_text,
         category: q.category,
@@ -243,7 +592,8 @@ app.post('/api/test/start', (req, res) => {
         points: q.points
       })),
       maxDuration: 1800, // 30 minutes
-      totalQuestions: questions.length
+      totalQuestions: shuffledQuestions.length,
+      questionsPerCategory: 5
     });
 
   } catch (error) {
