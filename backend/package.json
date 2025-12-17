@@ -1,0 +1,31 @@
+{
+  "name": "cybersecurity-aptitude-backend",
+  "version": "1.0.0",
+  "description": "Cybersecurity Aptitude Assessment System Backend",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.1",
+    "@mui/material": "^7.3.6",
+    "axios": "^1.13.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.6.1",
+    "exceljs": "^4.4.0",
+    "express": "^4.22.1",
+    "express-rate-limit": "^6.11.2",
+    "express-validator": "^7.0.1",
+    "helmet": "^7.2.0",
+    "pdfkit": "^0.14.0",
+    "pg": "^8.16.3",
+    "react-countdown": "^2.3.6",
+    "react-router-dom": "^7.10.1",
+    "react-toastify": "^11.0.5"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.22"
+  }
+}
