@@ -244,23 +244,34 @@ const TestPage = () => {
         </Card>
 
         {/* Navigation Buttons */}
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 3 }}>
+        <Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, alignItems: 'center', justifyContent: 'space-between', gap: 2, mt: 3 }}>
           <Button
             variant="outlined"
             onClick={handlePrevious}
             disabled={currentQuestion === 0}
+            sx={{ width: { xs: '100%', sm: 'auto' } }}
           >
             Previous
           </Button>
 
-          <Box sx={{ display: 'grid', gap: 1, width: { xs: '100%', sm: 'auto' }, gridTemplateColumns: 'repeat(auto-fit, minmax(40px, 1fr))' }}>
+          <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', justifyContent: 'center', alignItems: 'center', flex: 1 }}>
             {questions.map((_, index) => (
               <Button
                 key={index}
                 variant={index === currentQuestion ? 'contained' : 'outlined'}
-                size="small"
                 onClick={() => setCurrentQuestion(index)}
-                sx={{ minWidth: 0, px: 1 }}
+                sx={{
+                  width: 40,
+                  height: 40,
+                  minWidth: 40,
+                  p: 0,
+                  borderRadius: '50%',
+                  fontSize: '0.9rem',
+                  bgcolor: index === currentQuestion ? 'primary.main' : 'transparent',
+                  color: index === currentQuestion ? 'primary.contrastText' : 'inherit',
+                  '&:hover': { transform: 'scale(1.05)' },
+                }}
+                aria-label={`Question ${index + 1}`}
               >
                 {index + 1}
               </Button>
@@ -273,6 +284,7 @@ const TestPage = () => {
               color="success"
               onClick={handleSubmitTest}
               disabled={isSubmitting}
+              sx={{ minWidth: 140, width: { xs: '100%', sm: 'auto' } }}
             >
               {isSubmitting ? 'Submitting...' : 'Submit Test'}
             </Button>
@@ -280,6 +292,7 @@ const TestPage = () => {
             <Button
               variant="contained"
               onClick={handleNext}
+              sx={{ minWidth: 120, width: { xs: '100%', sm: 'auto' } }}
             >
               Next
             </Button>
